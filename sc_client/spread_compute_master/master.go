@@ -13,14 +13,9 @@ func main() {
 	var help = flag.String("h", "", "tools to split data,please go to github address get ")
 	var configPath = flag.String("config", "", "config service path")
 	var logFile = flag.String("log_file", "sc_master.log", "config log file path")
-	var registedGroupIds = flag.String("group_ids", "", "regitsted groupids!eg:a,b,c")
 	flag.Parse()
 	if *help == "h" {
 		fmt.Println("flag.Args")
-		return
-	}
-	if *registedGroupIds == "" {
-		fmt.Println("Please pre set groupIds to regist to master!")
 		return
 	}
 	gzlog.InitGZLogger(*logFile, 50*1000*1000, 5)

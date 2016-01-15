@@ -78,7 +78,7 @@ type ConsumerServiceDemo struct {
 
 func (*ConsumerServiceDemo) ConsumeData(data []interface{}) error {
 	for i, v := range data {
-		fmt.Printf("i:%s v:%s \n", i, v)
+		log.Printf("i:%s v:%s \n", i, v)
 	}
 	return nil
 }

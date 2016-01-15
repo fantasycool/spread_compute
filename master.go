@@ -208,11 +208,27 @@ func ProducerRegist(resp http.ResponseWriter, req *http.Request) {
 				}
 			}
 			address := strings.Split(remoteAddr, ":")[0]
+			dlock.Lock()
+			if IfExists(address, strconv.Itoa(port)) {
+				log.Printf("address:%s,port:%s already exists!", address, strconv.Itoa(port))
+				return
+			}
+			distinctCaches[fmt.Sprintf("%s:%s", address, strconv.Itoa(port))] = true
 			globalCache.Ccaches[int64(g)].ProducerList = append(globalCache.Ccaches[int64(g)].ProducerList,
 				&ProducerTask{GroupId: int64(g), Address: address, Name: name, RpcPort: port})
+			dlock.Unlock()
 			CacheMutex.Unlock()
 		}
 	}
+}
+
+var distinctCaches = make(map[string]bool)
+var dlock = sync.Mutex{}
+
+func IfExists(address string, port string) bool {
+	key := fmt.Sprintf("%s:%s", address, port)
+	_, b := distinctCaches[key]
+	return b
 }
 
 func ConsumerRegist(resp http.ResponseWriter, req *http.Request) {
@@ -251,10 +267,18 @@ func ConsumerRegist(resp http.ResponseWriter, req *http.Request) {
 				}
 			}
 			address := strings.Split(remoteAddr, ":")[0]
+			dlock.Lock()
+			if IfExists(address, strconv.Itoa(port)) {
+				log.Printf("address, port already exists!")
+				return
+			}
+			distinctCaches[fmt.Sprintf("%s:%s", address, strconv.Itoa(port))] = true
 			globalCache.Ccaches[int64(g)].ConsumerList = append(globalCache.Ccaches[int64(g)].ConsumerList,
 				&ConsumerTask{GroupId: int64(g), Address: address, Name: name, RpcPort: port})
-			log.Printf("now groupId %s consumerList length is %d, content is %s \n", groupId, len(globalCache.Ccaches[int64(g)].ConsumerList),
+			log.Printf("now groupId %s consumerList length is %d, content is %s \n", groupId,
+				len(globalCache.Ccaches[int64(g)].ConsumerList),
 				globalCache.Ccaches[int64(g)].ConsumerList)
+			dlock.Unlock()
 		}
 	}
 }

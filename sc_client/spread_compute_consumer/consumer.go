@@ -34,6 +34,7 @@ func main() {
 	}
 	log.Printf("Now we are starting consumer service!")
 	go consumerServer.StartRpc()
+	spread_compute.RegistConsumerService(2, new(spread_compute.ConsumerServiceDemo))
 	for _, v := range strings.Split(*registedGroupIds, ",") {
 		gId, err := strconv.Atoi(v)
 		if err != nil {

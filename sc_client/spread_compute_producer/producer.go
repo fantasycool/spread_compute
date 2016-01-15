@@ -29,6 +29,7 @@ func main() {
 	nps := spread_compute.NewProducerServer(*configPath)
 	log.Printf("Start to start rpc service!")
 	go nps.StartRpc()
+	spread_compute.RegistProducerService(2, new(spread_compute.ProducerServiceDemo))
 	log.Printf("Start to regist producer service!")
 	for _, v := range strings.Split(*registedGroupIds, ",") {
 		gId, err := strconv.Atoi(v)
