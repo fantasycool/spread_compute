@@ -6,6 +6,7 @@ import (
 )
 
 func ShuffleData(groupId int64, datas []interface{}) error {
+	log.Printf("Starting to shuffle data \n")
 	if PS == nil {
 		log.Printf("producerServer may not be inited!Please init firstly!\n")
 		return fmt.Errorf("producer server may not be inited,groupId:%d!", groupId)
