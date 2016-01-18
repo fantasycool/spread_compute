@@ -19,7 +19,7 @@ func (c *ConsumerServiceClient) ConsumeData(data []interface{}) error {
 	log.Printf("Start to consume data!data length is %d \n", len(data))
 	strIds := make([]string, 0)
 	for _, d := range data {
-		strIds = append(strIds, strconv.Itoa(d.(int)))
+		strIds = append(strIds, strconv.Itoa(int(d.(float64))))
 	}
 	pStr := strings.Join(strIds, ",")
 	log.Printf("command str is %s \n", c.CommandStr)
